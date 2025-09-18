@@ -1,13 +1,11 @@
 from langchain.text_splitter import SpacySentenceSplitter
 from pydantic import BaseModel
 
-from ..interfaces import ISplitter
-
 # python -m spacy download en_core_web_sm
 # python -m spacy download pt_core_news_sm
 
 
-class SentenceSplitter(BaseModel, ISplitter):
+class SentenceSplitter(BaseModel):
 
     language_model: str  # e.g., "en_core_web_sm", "pt_core_news_sm"
 

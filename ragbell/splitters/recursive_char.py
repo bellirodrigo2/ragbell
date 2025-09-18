@@ -1,10 +1,8 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from pydantic import BaseModel
 
-from ..interfaces import ISplitter
 
-
-class RecursiveSplitter(BaseModel, ISplitter):
+class RecursiveSplitter(BaseModel):
 
     chunk_size: int
     chunk_overlap: int

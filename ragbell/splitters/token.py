@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from ..interfaces import ISplitter
 
 
-class TokenSplitter(BaseModel, ISplitter):
+class TokenSplitter(BaseModel):
 
     chunk_size: int
     chunk_overlap: int

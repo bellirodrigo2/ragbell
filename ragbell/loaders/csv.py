@@ -1,16 +1,12 @@
 import pandas as pd
+from pydantic import BaseModel
 
-from ..interfaces import ILoader
 
+class CSVLoader(BaseModel):
 
-class CSVLoader(ILoader):
-
-    def __init__(
-        self, separator: str = ",", encoding: str = "utf-8", chunk_size: int = -1
-    ):
-        self.separator = separator
-        self.encoding = encoding
-        self.chunk_size = chunk_size
+    separator: str = ","
+    encoding: str = "utf-8"
+    chunk_size: int = -1
 
     def execute(self, path: str) -> list[dict]:
         df = pd.read_csv(

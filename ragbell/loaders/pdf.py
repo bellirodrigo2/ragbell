@@ -1,9 +1,7 @@
 from pypdf import PdfReader
 
-from ..interfaces import ILoader
 
-
-class PDFLoader(ILoader):
+class PDFLoader:
     def execute(self, path: str) -> list[dict]:
         reader = PdfReader(path)
         file_name = self._filename(path)

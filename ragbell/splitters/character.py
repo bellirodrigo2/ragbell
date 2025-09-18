@@ -1,10 +1,8 @@
 from langchain.text_splitter import CharacterTextSplitter
 from pydantic import BaseModel
 
-from ..interfaces import ISplitter
 
-
-class CharacterSplitter(BaseModel, ISplitter):
+class CharacterSplitter(BaseModel):
 
     chunk_size: int
     chunk_overlap: int

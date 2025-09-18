@@ -1,22 +1,13 @@
 import markdown2
 from bs4 import BeautifulSoup
+from pydantic import BaseModel
 
-from ..interfaces import ILoader
 from .html import HTMLLoader
 
 
-class MDLoader(ILoader):
-    def __init__(
-        self,
-        chunk_size: int = -1,
-        chunk_overlap: int = 0,
-    ):
-        """
-        :param chunk_size: Número de linhas por chunk (-1 = todas as linhas em 1 chunk)
-        :param chunk_overlap: número de linhas que cada chunk deve compartilhar com o próximo
-        """
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
+class MDLoader(BaseModel):
+    chunk_size: int = -1
+    chunk_overlap: int = 0
 
     def execute(self, path: str) -> list[dict]:
         """
