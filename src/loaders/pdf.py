@@ -4,9 +4,9 @@ from ..interfaces import ILoader
 
 
 class PDFLoader(ILoader):
-    def load(self, file_path: str) -> list[dict]:
-        reader = PdfReader(file_path)
-        file_name = self._filename(file_path)
+    def execute(self, path: str) -> list[dict]:
+        reader = PdfReader(path)
+        file_name = self._filename(path)
         doc = []
         for page in reader.pages:
             page = {

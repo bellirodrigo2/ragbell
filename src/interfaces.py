@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Protocol
 
 
@@ -14,19 +15,17 @@ class IEmbeddingDB(Protocol):
 
 class ISplitter(Protocol):
 
-    def split(self, text: str) -> list[str]: ...
+    def execute(self, text: str) -> list[str]: ...
 
 
 class ILoader(Protocol):
 
-    def load(self, path: str) -> list[dict]: ...
+    def execute(self, path: str) -> list[dict]: ...
 
     def _filename(self, path: str) -> str:
-        from pathlib import Path
-
         return Path(path).stem
 
 
 class IEmbeddingModel(Protocol):
 
-    def embed(self, text: str) -> list[float]: ...
+    def execute(self, text: str) -> list[float]: ...

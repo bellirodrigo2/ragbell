@@ -10,7 +10,7 @@ class TokenSplitter(BaseModel, ISplitter):
     chunk_overlap: int
     encoding_name: str
 
-    def split(self, text: str) -> list[str]:
+    def execute(self, text: str) -> list[str]:
         splitter = TokenTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,

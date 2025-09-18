@@ -10,7 +10,7 @@ class RecursiveSplitter(BaseModel, ISplitter):
     chunk_overlap: int
     separators: list[str]
 
-    def split(self, text: str) -> list[str]:
+    def execute(self, text: str) -> list[str]:
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,

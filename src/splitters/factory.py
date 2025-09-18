@@ -1,5 +1,7 @@
+from typing import Any
+
+from ..interfaces import ISplitter
 from .character import CharacterSplitter
-from .interfaces import ISplitter
 from .recursive_char import RecursiveSplitter
 from .semantic import SemanticSplitter
 from .sentence import SentenceSplitter

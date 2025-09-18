@@ -1,5 +1,5 @@
 [project]
-name = "RagBell"
+name = "ragbell"
 dynamic = ["version"]
 description = ""
 authors = [
@@ -16,7 +16,8 @@ dependencies = [
     "PyYAML>=6.0.2",
     "pypdf>=6.0.0",
     "pandas>=2.3.2",
-    "beautifulsoup4>=4.13.5"
+    "beautifulsoup4>=4.13.5",
+    "openai>=1.108.0",
 ]
 
 [project.optional-dependencies]

@@ -40,7 +40,7 @@ class HTMLLoader(ILoader):
             "noscript",
         ]
 
-    def load(self, path: str) -> list[dict]:
+    def execute(self, path: str) -> list[dict]:
         """
         Carrega um HTML e retorna uma lista de dicts no formato:
         {content: "...", metadata: {source: arquivo, page: índice}}
@@ -85,9 +85,3 @@ class HTMLLoader(ILoader):
             )
 
         return result
-
-
-if __name__ == "__main__":
-    loader = HTMLLoader(chunk_size=100, chunk_overlap=20)
-    data = loader.load("medium.html")
-    print(data[1])

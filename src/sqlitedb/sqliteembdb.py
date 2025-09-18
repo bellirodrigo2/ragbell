@@ -1,16 +1,20 @@
+import json
 import os
 import sqlite3
-import json
-from .. import IEmbeddingDB
+
 from dotenv import load_dotenv
+
+from ..interfaces import IEmbeddingDB
+
 
 def get_create_statement():
     load_dotenv()
-    sql_path = os.getenv("SQLITE_CREATE_PATH", "src/sqlitedb/sqlite_create.sql")
-    
+    sql_path = os.getenv("SQLITE_CREATE_PATH", "src/sqlitedb/sqlitecreate.sql")
+
     with open(sql_path, "r", encoding="utf-8") as f:
         sql_script = f.read()
     return sql_script
+
 
 class SQLiteEmbDB(IEmbeddingDB):
     def __init__(self, db_path: str):
@@ -29,14 +33,14 @@ class SQLiteEmbDB(IEmbeddingDB):
         cursor = self.conn.cursor()
         cursor.execute(
             "INSERT INTO embeddings (content, metadata, embedding, collection) VALUES (?, ?, ?, ?)",
-            (content, metadata_text, embedding_text, collection)
+            (content, metadata_text, embedding_text, collection),
         )
         row_id = cursor.lastrowid
 
         # Atualiza a tabela FTS
         cursor.execute(
             "INSERT INTO embeddings_fts(rowid, content, metadata) VALUES (?, ?, ?)",
-            (row_id, content, metadata_text)
+            (row_id, content, metadata_text),
         )
         cursor.close()
         self.conn.commit()
@@ -52,7 +56,7 @@ class SQLiteEmbDB(IEmbeddingDB):
             WHERE f MATCH ?
             LIMIT ?
             """,
-            (query, limit)
+            (query, limit),
         )
         results = cursor.fetchall()
         cursor.close()
@@ -62,7 +66,7 @@ class SQLiteEmbDB(IEmbeddingDB):
                 "content": r[1],
                 "metadata": json.loads(r[2]),
                 "embedding": json.loads(r[3]),
-                "collection": r[4]
+                "collection": r[4],
             }
             for r in results
         ]

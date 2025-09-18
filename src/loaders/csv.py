@@ -3,7 +3,7 @@ import pandas as pd
 from ..interfaces import ILoader
 
 
-class CsvLoader(ILoader):
+class CSVLoader(ILoader):
 
     def __init__(
         self, separator: str = ",", encoding: str = "utf-8", chunk_size: int = -1
@@ -12,7 +12,7 @@ class CsvLoader(ILoader):
         self.encoding = encoding
         self.chunk_size = chunk_size
 
-    def load(self, path: str) -> list[dict]:
+    def execute(self, path: str) -> list[dict]:
         df = pd.read_csv(
             path,
             sep=self.separator,
@@ -44,9 +44,3 @@ class CsvLoader(ILoader):
             )
 
         return result
-
-
-if __name__ == "__main__":
-    loader = CsvLoader(separator=";", encoding="latin1", chunk_size=-1)
-    data = loader.load("municipios.csv")
-    print(data[0])  # Exibir as duas primeiras linhas do CSV como dicionários

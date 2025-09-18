@@ -11,6 +11,6 @@ class SentenceSplitter(BaseModel, ISplitter):
 
     language_model: str  # e.g., "en_core_web_sm", "pt_core_news_sm"
 
-    def split(self, text: str) -> list[str]:
+    def execute(self, text: str) -> list[str]:
         splitter = SpacySentenceSplitter(pipeline=self.language_model)
         return splitter.split_text(text)
