@@ -47,7 +47,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
-version = {attr = "src._version.__version__"}
+version = {attr = "ragbell._version.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["src*"]
+include = ["ragbell*"]
