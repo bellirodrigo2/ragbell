@@ -1,3 +1,3 @@
-from .factory import get_loader
+from .factory import get_embedding_model
 
-__all__ = ["get_loader"]
+__all__ = ["get_embedding_model"]
