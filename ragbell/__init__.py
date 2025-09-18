@@ -1,4 +1,4 @@
-from .embeddings import get_embedding_model
+from .embedding import get_embedding_model
 from .interfaces import IEmbeddingDB
 from .loaders.factory import get_loader
 from .splitters.factory import get_splitter
