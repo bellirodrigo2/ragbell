@@ -1,12 +1,14 @@
 from ..interfaces import ILoader
 from .csv import CSVLoader
 from .html import HTMLLoader
+from .md import MDLoader
 from .pdf import PDFLoader
 
 LOADER_MAP = {
     "pdf": PDFLoader,
     "html": HTMLLoader,
     "csv": CSVLoader,
+    "md": MDLoader,
 }
 
 

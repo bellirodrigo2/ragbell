@@ -13,6 +13,7 @@ class HTMLLoader(ILoader):
     ):
         """
         :param chunk_size: Número de linhas por chunk (-1 = todas as linhas em 1 chunk)
+        :param chunk_overlap: número de linhas que cada chunk deve compartilhar com o próximo
         :param include_tags: Lista de tags HTML a extrair (ex: ["p", "h1", "li", "article"])
         :param exclude_tags: Lista de tags HTML a remover antes da extração (ex: ["script", "style", "nav"])
         """
@@ -40,19 +41,8 @@ class HTMLLoader(ILoader):
             "noscript",
         ]
 
-    def execute(self, path: str) -> list[dict]:
-        """
-        Carrega um HTML e retorna uma lista de dicts no formato:
-        {content: "...", metadata: {source: arquivo, page: índice}}
-        Apenas textos das tags relevantes, ignorando as tags de exclusão.
-
-        :param overlap: número de linhas que cada chunk deve compartilhar com o próximo
-        """
-        if self.chunk_size != -1 and self.chunk_overlap >= self.chunk_size:
-            raise ValueError("Overlap should be lower than chunk_size")
-
-        with open(path, "r", encoding="utf-8") as f:
-            soup = BeautifulSoup(f, "html.parser")
+    def from_text(self, text: str, path: str) -> list[dict]:
+        soup = BeautifulSoup(text, "html.parser")
 
         # Remove tags de exclusão
         for tag in soup(self.exclude_tags):
@@ -85,3 +75,17 @@ class HTMLLoader(ILoader):
             )
 
         return result
+
+    def execute(self, path: str) -> list[dict]:
+        """
+        Carrega um HTML e retorna uma lista de dicts no formato:
+        {content: "...", metadata: {source: arquivo, page: índice}}
+        Apenas textos das tags relevantes, ignorando as tags de exclusão.
+
+        :param overlap: número de linhas que cada chunk deve compartilhar com o próximo
+        """
+        if self.chunk_size != -1 and self.chunk_overlap >= self.chunk_size:
+            raise ValueError("Overlap should be lower than chunk_size")
+
+        with open(path, "r", encoding="utf-8") as f:
+            return self.from_text(f.read(), path)
