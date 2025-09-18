@@ -1,6 +1,8 @@
 import pandas as pd
 from pydantic import BaseModel
 
+from .utils import extract_filename
+
 
 class CSVLoader(BaseModel):
 
@@ -34,7 +36,7 @@ class CSVLoader(BaseModel):
             content = "\n".join(
                 ["; ".join([f"{col}: {row[col]}" for col in row]) for row in chunk]
             )
-            filename = self._filename(path)
+            filename = extract_filename(path)
             result.append(
                 {"content": content, "metadata": {"source": filename, "page": idx}}
             )

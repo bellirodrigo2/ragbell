@@ -1,10 +1,12 @@
 from pypdf import PdfReader
 
+from .utils import extract_filename
+
 
 class PDFLoader:
     def execute(self, path: str) -> list[dict]:
         reader = PdfReader(path)
-        file_name = self._filename(path)
+        file_name = extract_filename(path)
         doc = []
         for page in reader.pages:
             page = {

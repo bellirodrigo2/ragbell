@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Protocol
 
 
@@ -21,9 +20,6 @@ class ISplitter(Protocol):
 class ILoader(Protocol):
 
     def execute(self, path: str) -> list[dict]: ...
-
-    def _filename(self, path: str) -> str:
-        return Path(path).stem
 
 
 class IEmbeddingModel(Protocol):

@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 from pydantic import BaseModel
 
+from .utils import extract_filename
+
 
 class HTMLLoader(BaseModel):
     chunk_size: int = -1
@@ -34,7 +36,7 @@ class HTMLLoader(BaseModel):
                 i += self.chunk_size - self.chunk_overlap
 
         result = []
-        filename = self._filename(path)
+        filename = extract_filename(path)
         for idx, chunk in enumerate(chunks):
             content = "\n".join(chunk)
             result.append(
