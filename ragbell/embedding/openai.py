@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 
 from ..interfaces import IEmbeddingModel
 
