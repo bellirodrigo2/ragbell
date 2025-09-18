@@ -16,7 +16,7 @@ def get_create_statement():
     return sql_script
 
 
-class SQLiteEmbDB(IEmbeddingDB):
+class SQLiteEmbeddingDB(IEmbeddingDB):
     def __init__(self, db_path: str):
         self.conn = sqlite3.connect(db_path)
         self.conn.execute("PRAGMA foreign_keys = ON;")

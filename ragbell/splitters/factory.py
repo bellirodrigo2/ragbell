@@ -3,14 +3,14 @@ from typing import Any
 from ..interfaces import ISplitter
 from .character import CharacterSplitter
 from .recursive_char import RecursiveSplitter
-from .semantic import SemanticSplitter
+from .semantic import SpacySemanticSplitter
 from .sentence import SentenceSplitter
 from .token import TokenSplitter
 
 SPLITTER_MAP = {
     "character": CharacterSplitter,
     "recursive": RecursiveSplitter,
-    "semantic": SemanticSplitter,
+    "semantic": SpacySemanticSplitter,
     "sentence": SentenceSplitter,
     "token": TokenSplitter,
 }
