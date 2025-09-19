@@ -1,3 +1,3 @@
-from .sqliteembdb import SQLiteEmbeddingDB
+from .sqliteembdb import SQLiteContentDB, SQLiteEmbeddingDB, SQLiteSplittedContentDB
 
-__all__ = ["SQLiteEmbeddingDB"]
+__all__ = ["SQLiteContentDB", "SQLiteEmbeddingDB", "SQLiteSplittedContentDB"]

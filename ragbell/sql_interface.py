@@ -1,0 +1,26 @@
+from typing import Protocol
+
+
+class IContentDB(Protocol):
+
+    def insert(self, content: str, metadata: dict): ...
+
+    def search_fts(self, query: str, limit: int = 10): ...
+
+    def close(self): ...
+
+class ISplittedContentDB(Protocol):
+
+    def insert(self, content_id: int, content: str, collection: str): ...
+
+    def get_all(self, content_id: int = None, collection: str = None): ...
+
+    def close(self): ...
+
+class IEmbeddingDB(Protocol):
+
+    def insert(self, splitted_content_id: int, embedding: list): ...
+
+    def get_embeddings(self, splitted_content_id: int = None): ...
+
+    def close(self): ..
