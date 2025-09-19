@@ -9,16 +9,22 @@ from ..sql_interface import IContentDB, IEmbeddingDB, ISplittedContentDB
 
 def get_create_statement():
     load_dotenv()
-    sql_path = os.getenv("SQLITE_CREATE_PATH", "src/sqlitedb/sqlitecreate.sql")
+    sql_path = os.getenv("SQLITE_CREATE_PATH", None)
+    if sql_path is None:
+        raise ValueError("SQLITE_CREATE_PATH not set in .env")
 
     with open(sql_path, "r", encoding="utf-8") as f:
         sql_script = f.read()
     return sql_script
 
 
-class SQLiteContentDB(IContentDB):
+class BaseDB:
     def __init__(self, db_path: str):
-        self.conn = sqlite3.connect(db_path)
+        self.db_path = db_path
+        self.connect()
+
+    def connect(self):
+        self.conn = sqlite3.connect(self.db_path)
         self.conn.execute("PRAGMA foreign_keys = ON;")
         self._create_tables()
 
@@ -26,6 +32,15 @@ class SQLiteContentDB(IContentDB):
         sql_script = get_create_statement()
         self.conn.executescript(sql_script)
         self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
+
+class SQLiteContentDB(BaseDB, IContentDB):
+
+    def __init__(self, db_path: str):
+        super().__init__(db_path)
 
     def insert(self, content: str, metadata: dict):
         """
@@ -59,7 +74,7 @@ class SQLiteContentDB(IContentDB):
             SELECT c.id, c.content, c.metadata
             FROM content c
             JOIN content_fts f ON c.id = f.rowid
-            WHERE f MATCH ?
+            WHERE content_fts MATCH ?
             LIMIT ?
             """,
             (query, limit),
@@ -75,20 +90,11 @@ class SQLiteContentDB(IContentDB):
             for r in results
         ]
 
-    def close(self):
-        self.conn.close()
 
+class SQLiteSplittedContentDB(BaseDB, ISplittedContentDB):
 
-class SQLiteSplittedContentDB(ISplittedContentDB):
     def __init__(self, db_path: str):
-        self.conn = sqlite3.connect(db_path)
-        self.conn.execute("PRAGMA foreign_keys = ON;")
-        self._create_tables()
-
-    def _create_tables(self):
-        sql_script = get_create_statement()
-        self.conn.executescript(sql_script)
-        self.conn.commit()
+        super().__init__(db_path)
 
     def insert(self, content_id: int, content: str, collection: str):
         """
@@ -136,20 +142,11 @@ class SQLiteSplittedContentDB(ISplittedContentDB):
             for r in results
         ]
 
-    def close(self):
-        self.conn.close()
 
+class SQLiteEmbeddingDB(BaseDB, IEmbeddingDB):
 
-class SQLiteEmbeddingDB(IEmbeddingDB):
     def __init__(self, db_path: str):
-        self.conn = sqlite3.connect(db_path)
-        self.conn.execute("PRAGMA foreign_keys = ON;")
-        self._create_tables()
-
-    def _create_tables(self):
-        sql_script = get_create_statement()
-        self.conn.executescript(sql_script)
-        self.conn.commit()
+        super().__init__(db_path)
 
     def insert(self, splitted_content_id: int, embedding: list):
         """
@@ -190,6 +187,3 @@ class SQLiteEmbeddingDB(IEmbeddingDB):
             }
             for r in results
         ]
-
-    def close(self):
-        self.conn.close()

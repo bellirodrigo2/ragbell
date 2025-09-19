@@ -1,0 +1,7 @@
+loaders:
+  - type: "directory"
+    params:
+      path: "./tests/data/tools"
+  - type: "pdf"
+    params:
+      file_path: "./tests/data/es.pdf"

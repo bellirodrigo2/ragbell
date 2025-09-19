@@ -1,4 +1,5 @@
 from .embedder import get_embedding_model
+from .ingest import load_docs, persist_docs
 from .loaders import get_loader
 from .splitters import get_splitter
 from .sql_interface import IEmbeddingDB
@@ -12,4 +13,6 @@ __all__ = [
     "SQLiteContentDB",
     "SQLiteEmbeddingDB",
     "SQLiteSplittedContentDB",
+    "load_docs",
+    "persist_docs",
 ]

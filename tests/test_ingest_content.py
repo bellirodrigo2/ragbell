@@ -1,0 +1,25 @@
+import pytest
+
+from ragbell import SQLiteContentDB, load_docs, persist_docs
+
+
+@pytest.fixture
+def get_db():
+
+    db = SQLiteContentDB(":memory:")
+    yield db
+
+
+yaml_loaders_path = "tests/loaders.yaml"
+
+
+def test_ingest_content(get_db):
+
+    db = get_db
+
+    docs = load_docs(yaml_loaders_path)
+    persist_docs(docs, db)
+
+    texts = db.search_fts("elasticsearch", 10)
+
+    assert len(texts) == 10
