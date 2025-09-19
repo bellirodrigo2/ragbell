@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -68,28 +69,21 @@ class SQLiteContentDB(BaseDB, IContentDB):
         cursor.close()
         return count
 
-    # def search_fts(self, query: str, limit: int = 10):
-    # cursor = self.conn.cursor()
-    # cursor.execute(
-    # """
-    # SELECT c.id, c.content, c.metadata
-    # FROM content c
-    # JOIN content_fts f ON c.id = f.rowid
-    # WHERE content_fts MATCH ?
-    # LIMIT ?
-    # """,
-    # (query, limit),
-    # )
-    # results = cursor.fetchall()
-    # cursor.close()
-    # return [
-    # {
-    # "id": r[0],
-    # "content": r[1],
-    # "metadata": json.loads(r[2]),
-    # }
-    # for r in results
-    # ]
+    def read_by_metadata(self, key: str, value: Any) -> list[tuple[int, str]]:
+        cursor = self.conn.cursor()
+        query = """
+            SELECT id, content
+            FROM content
+            WHERE json_extract(metadata, ?) = ?
+        """
+        json_path = f"$.{key}"
+        cursor.execute(query, (json_path, value))
+        rows = cursor.fetchall()
+        cursor.close()
+
+        # Converter metadata string de volta para dict
+        results = [(row[0], row[1]) for row in rows]
+        return results
 
 
 class SQLiteSplittedContentDB(BaseDB, ISplittedContentDB):

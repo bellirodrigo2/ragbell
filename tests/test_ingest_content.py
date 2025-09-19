@@ -23,3 +23,7 @@ def test_ingest_content(get_db):
     count = db.count()
 
     assert count == 42
+
+    content = db.read_by_metadata("source", "./tests/data/es.pdf")
+
+    assert len(content) == 40
