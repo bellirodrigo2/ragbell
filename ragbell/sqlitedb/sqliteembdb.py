@@ -4,7 +4,7 @@ import sqlite3
 
 from dotenv import load_dotenv
 
-from ..interfaces import IContentDB, IEmbeddingDB, ISplittedContentDB
+from ..sql_interface import IContentDB, IEmbeddingDB, ISplittedContentDB
 
 
 def get_create_statement():

@@ -9,6 +9,7 @@ class IContentDB(Protocol):
 
     def close(self): ...
 
+
 class ISplittedContentDB(Protocol):
 
     def insert(self, content_id: int, content: str, collection: str): ...
@@ -17,10 +18,11 @@ class ISplittedContentDB(Protocol):
 
     def close(self): ...
 
+
 class IEmbeddingDB(Protocol):
 
     def insert(self, splitted_content_id: int, embedding: list): ...
 
     def get_embeddings(self, splitted_content_id: int = None): ...
 
-    def close(self): ..
+    def close(self): ...
