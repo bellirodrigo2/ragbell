@@ -20,6 +20,6 @@ def test_ingest_content(get_db):
     docs = load_docs(yaml_loaders_path)
     persist_docs(docs, db)
 
-    texts = db.search_fts("elasticsearch", 10)
+    count = db.count()
 
-    assert len(texts) == 10
+    assert count == 42

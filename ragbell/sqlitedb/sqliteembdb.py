@@ -43,9 +43,7 @@ class SQLiteContentDB(BaseDB, IContentDB):
         super().__init__(db_path)
 
     def insert(self, content: str, metadata: dict):
-        """
-        Insere um registro na tabela 'content' e atualiza a FTS.
-        """
+
         metadata_text = json.dumps(metadata)
 
         cursor = self.conn.cursor()
@@ -55,40 +53,43 @@ class SQLiteContentDB(BaseDB, IContentDB):
         )
         row_id = cursor.lastrowid
 
-        # Atualiza a tabela FTS
-        cursor.execute(
-            "INSERT INTO content_fts(rowid, content) VALUES (?, ?)",
-            (row_id, content),
-        )
+        # cursor.execute(
+        # "INSERT INTO content_fts(rowid, content) VALUES (?, ?)",
+        # (row_id, content),
+        # )
         cursor.close()
         self.conn.commit()
         return row_id
 
-    def search_fts(self, query: str, limit: int = 10):
-        """
-        Busca registros usando FTS apenas no campo 'content'.
-        """
+    def count(self) -> int:
         cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT c.id, c.content, c.metadata
-            FROM content c
-            JOIN content_fts f ON c.id = f.rowid
-            WHERE content_fts MATCH ?
-            LIMIT ?
-            """,
-            (query, limit),
-        )
-        results = cursor.fetchall()
+        cursor.execute("SELECT COUNT(*) FROM content")
+        count = cursor.fetchone()[0]
         cursor.close()
-        return [
-            {
-                "id": r[0],
-                "content": r[1],
-                "metadata": json.loads(r[2]),
-            }
-            for r in results
-        ]
+        return count
+
+    # def search_fts(self, query: str, limit: int = 10):
+    # cursor = self.conn.cursor()
+    # cursor.execute(
+    # """
+    # SELECT c.id, c.content, c.metadata
+    # FROM content c
+    # JOIN content_fts f ON c.id = f.rowid
+    # WHERE content_fts MATCH ?
+    # LIMIT ?
+    # """,
+    # (query, limit),
+    # )
+    # results = cursor.fetchall()
+    # cursor.close()
+    # return [
+    # {
+    # "id": r[0],
+    # "content": r[1],
+    # "metadata": json.loads(r[2]),
+    # }
+    # for r in results
+    # ]
 
 
 class SQLiteSplittedContentDB(BaseDB, ISplittedContentDB):
@@ -97,23 +98,23 @@ class SQLiteSplittedContentDB(BaseDB, ISplittedContentDB):
         super().__init__(db_path)
 
     def insert(self, content_id: int, content: str, collection: str):
-        """
-        Insere um registro na tabela 'splitted_content'.
-        """
         cursor = self.conn.cursor()
         cursor.execute(
             "INSERT INTO splitted_content (content_id, content, collection) VALUES (?, ?, ?)",
             (content_id, content, collection),
         )
         row_id = cursor.lastrowid
+
+        cursor.execute(
+            "INSERT INTO splitted_content_fts(rowid, content) VALUES (?, ?)",
+            (row_id, content),
+        )
+
         cursor.close()
         self.conn.commit()
         return row_id
 
     def get_all(self, content_id: int = None, collection: str = None):
-        """
-        Retorna registros de splitted_content filtrados por content_id ou collection.
-        """
         cursor = self.conn.cursor()
         query = (
             "SELECT id, content_id, content, collection FROM splitted_content WHERE 1=1"
@@ -138,6 +139,29 @@ class SQLiteSplittedContentDB(BaseDB, ISplittedContentDB):
                 "content_id": r[1],
                 "content": r[2],
                 "collection": r[3],
+            }
+            for r in results
+        ]
+
+    def search_fts(self, query: str, limit: int = 10):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            """
+                SELECT c.id, c.content, c.collection
+                FROM splitted_content c
+                JOIN content_fts f ON c.id = f.rowid
+                WHERE splitted_content_fts MATCH ?
+                LIMIT ?
+        """,
+            (query, limit),
+        )
+        results = cursor.fetchall()
+        cursor.close()
+        return [
+            {
+                "id": r[0],
+                "content": r[1],
+                "collection": r[2],
             }
             for r in results
         ]

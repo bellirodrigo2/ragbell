@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS content (
     metadata TEXT NOT NULL
 );
 
+-- Conteúdo fragmentado
 CREATE TABLE IF NOT EXISTS splitted_content (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     content_id INTEGER,
@@ -13,16 +14,16 @@ CREATE TABLE IF NOT EXISTS splitted_content (
     FOREIGN KEY (content_id) REFERENCES content(id) ON DELETE CASCADE
 );
 
--- Tabela de embeddings
+-- Embeddings (1:1 com splitted_content)
 CREATE TABLE IF NOT EXISTS embeddings (
-    splitted_content_id INTEGER,
+    splitted_content_id INTEGER PRIMARY KEY,
     embedding TEXT NOT NULL,
     FOREIGN KEY (splitted_content_id) REFERENCES splitted_content(id) ON DELETE CASCADE
 );
 
--- Tabela virtual FTS5 para busca textual apenas em 'content'
-CREATE VIRTUAL TABLE IF NOT EXISTS content_fts USING fts5(
+-- Busca textual
+CREATE VIRTUAL TABLE IF NOT EXISTS splitted_content_fts USING fts5(
     content,
-    content='content',
+    content='splitted_content',
     content_rowid='id'
 );
